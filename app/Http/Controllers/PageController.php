@@ -20,4 +20,8 @@ class PageController extends Controller
     {
         return view('contact');
     }
+    public function menu()
+    {
+        return view('menu');
+    }
 }
