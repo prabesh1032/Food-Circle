@@ -32,7 +32,16 @@
                 @foreach($categories as $category)
                     <tr class="border-b hover:bg-gray-50 transition-all duration-200">
                         <td class="py-3 px-6 text-center">{{ $loop->iteration }}</td>
-                        <td class="py-3 px-6">{{ $category->name }}</td>
+                        <td class="py-3 px-6">
+                            {{ $category->name }}
+                            <div class="mt-2">
+                                @if($category->icon)
+                                    <span class="text-red-600 text-2xl">{!! $category->icon !!}</span> <!-- Render the stored icon with red color -->
+                                @else
+                                    <i class="fas fa-project-diagram text-xl text-gray-700"></i> <!-- Default icon -->
+                                @endif
+                            </div>
+                        </td>
                         <td class="py-3 px-6 text-center">{{ $category->priority }}</td>
                         <td class="py-3 px-6 flex space-x-4">
                             <!-- Edit Button -->

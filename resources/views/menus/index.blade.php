@@ -17,46 +17,43 @@
         </div>
     @endif
 
-    <div class="overflow-x-auto shadow-lg rounded-lg">
-        <table class="min-w-full text-left border-collapse border border-gray-300">
-            <thead class="bg-cyan-500 text-white">
-                <tr>
-                    <th class="border border-gray-300 px-4 py-2">#</th>
-                    <th class="border border-gray-300 px-4 py-2">Name</th>
-                    <th class="border border-gray-300 px-4 py-2">Category</th>
-                    <th class="border border-gray-300 px-4 py-2">Price</th>
-                    <th class="border border-gray-300 px-4 py-2">Availability</th>
-                    <th class="border border-gray-300 px-4 py-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($menus as $menu)
-                    <tr class="hover:bg-gray-50 transition duration-300">
-                        <td class="border border-gray-300 px-4 py-2">{{ $loop->iteration }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ $menu->name }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ $menu->menuCategory->name }}</td>
-                        <td class="border border-gray-300 px-4 py-2">₹{{ number_format($menu->price, 2) }}</td>
-                        <td class="border border-gray-300 px-4 py-2">
-                            <span class="px-2 py-1 rounded-lg text-sm
-                                {{ $menu->is_available ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
-                                {{ $menu->is_available ? 'Available' : 'Unavailable' }}
-                            </span>
-                        </td>
-                        <td class="border border-gray-300 px-4 py-2">
-                            <a href="{{ route('menus.edit', $menu->id) }}" class="text-blue-600 hover:text-blue-800 flex items-center space-x-1">
-                                <i class="ri-edit-2-line"></i><span>Edit</span>
-                            </a>
-                            <form action="{{ route('menus.destroy', $menu->id) }}" method="POST" style="display:inline;" class="inline-block">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-800 flex items-center space-x-1 mt-2">
-                                    <i class="ri-delete-bin-6-line"></i><span>Delete</span>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        @foreach($menus as $menu)
+            <div class="bg-white shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105">
+                @if($menu->image)
+                    <img src="{{ asset('menus/' . $menu->image) }}" alt="{{ $menu->name }}" class="w-full h-40 object-cover">
+                @else
+                    <div class="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">
+                        <i class="ri-image-line text-4xl"></i>
+                    </div>
+                @endif
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold inline-block">
+                        {{ $menu->name }}
+                    </h3>
+                    <p class="text-sm text-gray-500 mb-2">{{ $menu->menuCategory->name }}
+                        @if($menu->menuCategory->icon)
+                        <span class="text-red-600 text-xl inline-block ml-2">{!! $menu->menuCategory->icon !!}</span>
+                    @endif
+                    </p>
+                    <p class="text-xl font-bold text-cyan-600">₹{{ number_format($menu->price, 2) }}</p>
+                    <span class="px-3 py-1 inline-block rounded-full text-sm font-medium mt-2
+                        {{ $menu->is_available ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
+                        {{ $menu->is_available ? 'Available' : 'Unavailable' }}
+                    </span>
+                    <div class="flex justify-between items-center mt-4">
+                        <a href="{{ route('menus.edit', $menu->id) }}" class="text-blue-600 hover:text-blue-800 flex items-center space-x-1">
+                            <i class="ri-edit-2-line"></i><span>Edit</span>
+                        </a>
+                        <a href="{{ route('menus.destroy', $menu->id) }}"
+                            class="text-red-600 hover:text-red-800 flex items-center space-x-1"
+                            onclick="return confirm('Are you sure you want to delete this category?')">
+                             <i class="ri-delete-bin-5-line text-xl mr-2"></i> Delete
+                         </a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </div>
 @endsection
+

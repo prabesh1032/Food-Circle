@@ -8,6 +8,7 @@
     <form action="{{ route('menucategory.update', $category->id) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')  <!-- Specify the HTTP method as PUT for updating -->
+
         <!-- Category Name -->
         <div class="form-group">
             <label for="name" class="text-lg">Category Name</label>
@@ -32,6 +33,20 @@
             @enderror
         </div>
 
+        <!-- Icon Input -->
+        <div class="mb-4">
+            <label for="icon" class="block text-sm font-medium text-gray-700">Icon (Remix Icon Class)</label>
+            <input type="text" name="icon" id="icon" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                   value="{{ old('icon', $category->icon) }}" placeholder="e.g., ri-pizza-line">
+            <p class="text-sm text-gray-500 mt-1">Enter the Remix icon class name (e.g., <strong>ri-pizza-line</strong>)</p>
+            @error('icon')
+                <div class="text-red-600 mt-2 text-sm">
+                    *{{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <!-- Submit and Cancel Buttons -->
         <div class="flex justify-center space-x-4">
             <button type="submit" class="bg-blue-600 text-white py-3 px-5 rounded-md font-bold">
                 Update Category

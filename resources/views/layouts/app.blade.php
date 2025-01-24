@@ -16,13 +16,15 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-gray-100">
-        {{-- @include('layouts.alert') --}}
+        @include('layouts.alert')
 
         <div class="flex">
             <!-- Sidebar -->
             <div class="w-64 h-screen bg-black text-white sticky top-0 px-1 py-1">
                 <div class="flex items-center justify-center mb-10">
-                    <img src="{{ asset('logo-foodcircle.png') }}" alt="FoodCircle Logo" class="w-5/12">
+                    <a href="{{ route('home') }}">
+                        <img src="{{ asset('logo-foodcircle.png') }}" alt="FoodCircle Logo" class="w-5/12">
+                    </a>
                 </div>
                 <div class="space-y-1">
                     <!-- Dashboard -->
@@ -41,7 +43,7 @@
                         <span>Menus</span>
                     </a>
                     <!-- Orders -->
-                    <a href="" class="flex items-center space-x-3 text-lg hover:bg-cyan-500 hover:text-black p-3 rounded-md">
+                    <a href="{{ route('orders.index') }}" class="flex items-center space-x-3 text-lg hover:bg-cyan-500 hover:text-black p-3 rounded-md">
                         <i class="ri-file-list-3-line text-xl"></i>
                         <span>Orders</span>
                     </a>

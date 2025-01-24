@@ -14,14 +14,18 @@ class Menu extends Model
         'name',
         'description',
         'price',
-        'menu_category_id',
+        'category_id',
         'image',
         'is_available',
     ];
 
     // Define relationship with MenuCategory
-    public function category()
+    public function menuCategory()
     {
-        return $this->belongsTo(MenuCategory::class, 'menu_category_id');
+        return $this->belongsTo(MenuCategory::class, 'category_id');
+    }
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class, 'menu_id');
     }
 }

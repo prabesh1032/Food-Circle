@@ -22,6 +22,7 @@ class MenuCategoryController extends Controller
         $data= $request->validate([
             'name'=>'required|alpha',
             'priority'=>'required|integer',
+            'icon' => 'nullable|string',
         ]);
         MenuCategory::create($data);
        return redirect()->route('menucategory.index')->with('success','Category Created Sucessfully');
@@ -35,7 +36,8 @@ class MenuCategoryController extends Controller
     {
         $data=$request->validate([
             'name'=>'required | alpha',
-            'priority'=>'required| integer'
+            'priority'=>'required| integer',
+            'icon' => 'nullable|string',
         ]);
         $category=MenuCategory::find($id);
         $category->update($data);
