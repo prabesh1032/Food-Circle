@@ -17,56 +17,64 @@
     @endif
 
     <!-- Order Form -->
-    <form action="{{ route('orders.store') }}" method="post" id="COD">
+    <form action="{{ route('orders.store') }}" method="post" id="checkoutForm">
         @csrf
+
         <!-- Food Details -->
         <div class="flex flex-col md:flex-row gap-8">
             <!-- Food Image -->
-            @if($cart->menu)
-                <img src="{{ asset('menus/' . $cart->menu->image) }}" alt="Food Image" class="w-full md:w-1/3 h-44 object-cover rounded-lg shadow-md">
-            @else
-                <div class="w-full md:w-1/3 h-44 bg-gray-300 rounded-lg shadow-md"></div>
-            @endif
+            <img src="{{ asset('menus/' . $menu->image) }}" alt="Food Image" class="w-full md:w-1/3 h-44 object-cover rounded-lg shadow-md">
 
             <!-- Food Info -->
             <div class="flex-1">
-                <h2 class="text-3xl font-bold text-black">{{ $cart->menu ? $cart->menu->name : 'Item Unavailable' }}</h2>
+                <h2 class="text-3xl font-bold text-black">{{ $menu->name }}</h2>
                 <p class="text-lg text-gray-700 mt-4">
-                    <span class="font-semibold">Price:</span> ${{ number_format($cart->menu ? $cart->menu->price : 0, 2) }}
+                    <span class="font-semibold">Price:</span> ${{ number_format($menu->price, 2) }}
                 </p>
                 <p class="text-lg text-gray-700">
-                    <span class="font-semibold">Quantity:</span> {{ $cart->quantity }}
+                    <span class="font-semibold">Quantity:</span> {{ $quantity }}
                 </p>
                 <p class="text-xl text-gray-900 font-bold mt-4">
-                    <i class="ri-calculator-line text-yellow-500"></i> Total: ${{ number_format(($cart->menu ? $cart->menu->price : 0) * $cart->quantity, 2) }}
+                    <i class="ri-calculator-line text-yellow-500"></i>
+                    Total: ${{ number_format($menu->price * $quantity, 2) }}
                 </p>
             </div>
         </div>
 
-        <!-- Hidden Inputs for menu_id, price, quantity, and cart_id -->
-        <input type="hidden" name="menu_id" value="{{ $cart->menu ? $cart->menu->id : '' }}">
-        <input type="hidden" name="price" value="{{ $cart->menu ? $cart->menu->price : 0 }}">
-        <input type="hidden" name="quantity" value="{{ $cart->quantity }}">
-        <input type="hidden" name="cart_id" value="{{ $cart->id }}">
+        <!-- Hidden Inputs -->
+        <input type="hidden" name="menu_id" value="{{ $menu->id }}">
+        <input type="hidden" name="price" value="{{ $menu->price }}">
+        <input type="hidden" name="quantity" value="{{ $quantity }}">
 
         <!-- Customer Information -->
-        <h2 class="text-2xl font-bold text-black mb-4">Customer Information</h2>
+        <h2 class="text-2xl font-bold text-black mb-4 mt-8">Customer Information</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Name -->
             <div>
                 <label for="name" class="text-gray-600 font-semibold">Name</label>
                 <input type="text" id="name" name="name" value="{{ old('name', auth()->user()->name) }}"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-400">
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-400" required>
                 @error('name')
                     <div class="text-red-500 text-sm mt-2">{{ $message }}</div>
                 @enderror
             </div>
+
             <!-- Email -->
             <div>
                 <label for="email" class="text-gray-600 font-semibold">Email</label>
                 <input type="email" id="email" name="email" value="{{ old('email', auth()->user()->email) }}"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-400">
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-400" required>
                 @error('email')
+                    <div class="text-red-500 text-sm mt-2">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Phone -->
+            <div class="mt-6">
+                <label for="phone" class="text-gray-600 font-semibold">Phone Number</label>
+                <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Enter your phone number"
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-400" required>
+                @error('phone')
                     <div class="text-red-500 text-sm mt-2">{{ $message }}</div>
                 @enderror
             </div>
@@ -76,7 +84,7 @@
         <div class="mt-6">
             <label for="address" class="text-gray-600 font-semibold">Delivery Address</label>
             <input type="text" id="address" name="address" value="{{ old('address') }}" placeholder="Enter your delivery address"
-                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-400">
+                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-400" required>
             @error('address')
                 <div class="text-red-500 text-sm mt-2">{{ $message }}</div>
             @enderror
@@ -101,13 +109,6 @@
             </button>
         </div>
     </form>
-</div>
-
-<!-- Back to Cart Button -->
-<div class="text-center mt-8">
-    <a href="{{ route('cart.index') }}" class="text-cyan-600 font-medium hover:underline flex items-center justify-center gap-2">
-        <i class="ri-arrow-left-line"></i> Back to Cart
-    </a>
 </div>
 
 @endsection

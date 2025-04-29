@@ -13,7 +13,7 @@ class Order extends Model
      * The attributes that are mass assignable.
      */
     // Order model
-    protected $fillable = ['name','phone','menu_id', 'price', 'quantity', 'user_id', 'status', 'address', 'payment_method'];
+    protected $fillable = ['name','total_price','phone','menu_id', 'price', 'quantity', 'user_id', 'status', 'address', 'payment_method'];
 
     /**
      * Relationships

@@ -23,22 +23,19 @@
                 <a href="" class="text-lg font-semibold hover:text-yellow-500">
                     <i class="ri-user-fill"></i> Hi, {{ auth()->user()->name }}
                 </a>
-                <a href="" class="p-3 text-lg font-semibold hover:text-yellow-500">
-                    <i class="ri-file-list-3-line"></i> My Orders
-                </a>
-
-                <!-- Add My Cart link with cart count -->
-                <a href="{{ route('cart.index') }}" class="p-3 text-lg font-semibold hover:text-yellow-500 relative">
-                    <i class="ri-shopping-cart-2-line"></i> My Cart
-                    @php
-                        $cartCount = session('cart', []);
-                        $itemCount = count($cartCount);
-                    @endphp
-                    @if($itemCount > 0)
-                        <span class="absolute top-0 right-0 text-xs font-semibold text-white bg-red-500 rounded-full w-5 h-5 flex items-center justify-center">{{ $itemCount }}</span>
-                    @endif
-                </a>
-
+                <!-- My Orders Link with Badge -->
+                <div class="relative flex items-center space-x-2">
+                    <a href="{{ route('myorders') }}" class="p-3 text-lg font-semibold text-black hover:text-yellow-500 flex items-center space-x-2 {{ Route::currentRouteName() == 'myorders' ? 'text-yellow-500 font-bold' : '' }}">
+                        <i class="ri-file-list-3-line"></i>
+                        <span>My Orders</span>
+                    </a>
+                    <span class="absolute -top-1 -right-0 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                        @php
+                            $orderCount = \App\Models\Order::where('user_id', auth()->id())->count();
+                        @endphp
+                        {{ $orderCount }}
+                    </span>
+                </div>
                 <!-- Logout form -->
                 <form action="{{ route('logout') }}" method="post" class="inline">
                     @csrf

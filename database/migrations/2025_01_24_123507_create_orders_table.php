@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('menu_id')->constrained()->onDelete('cascade'); // Reference to the menu item
             $table->decimal('price', 10, 2); // Price of the menu item
             $table->integer('quantity'); // Quantity of the item ordered
+            $table->decimal('total_price', 10, 2); // Add the total_price column here
             $table->string('status')->default('pending'); // Status of the order (e.g., "pending", "completed", etc.)
             $table->string('payment_method'); // Payment method (e.g., "cash", "card")
             $table->string('name'); // Name of the customer

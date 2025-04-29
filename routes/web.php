@@ -9,10 +9,10 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/',[PageController::class, 'home'])->name('home');
-Route::get('/about',[PageController::class, 'about'])->name('about');
-Route::get('/contact',[PageController::class, 'contact'])->name('contact');
-Route::get('/viewmenu/{id}',[PageController::class,'viewmenu'])->name('viewmenu');
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::get('/viewmenu/{id}', [PageController::class, 'viewmenu'])->name('viewmenu');
 
 
 Route::get('/allmenus', [MenuController::class, 'menus'])->name('menu');
@@ -31,21 +31,22 @@ Route::put('/menus/{id}', [MenuController::class, 'update'])->name('menus.update
 Route::get('/menus/{id}', [MenuController::class, 'destroy'])->name('menus.destroy');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
-    Route::get('/cart', [CartController::class, 'myCart'])->name('cart.index');
-    Route::delete('/cart/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::get('/checkout/{id}', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/my-orders', [OrderController::class, 'userOrders'])->name('myorders');
+    Route::post('/cancel-order/{order}', [OrderController::class, 'cancelOrder'])->name('orders.cancel');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/customers', [DashboardController::class, 'index'])->name('customers.index');
+
+    Route::post('/direct-checkout', [OrderController::class, 'directCheckout'])->name('direct.checkout');
+    Route::get('/orders/index', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}/{status}', [OrderController::class, 'status'])->name('orders.status');
+    Route::POST('/orders/store', [OrderController::class, 'store'])->name('orders.store');
+    Route::post('/order/esewa/{cartid}', [OrderController::class, 'storeEsewa'])->name('order.storeEsewa');
 });
-
-Route::get('/dashboard', [DashboardController::class,'dashboard'])->name('dashboard');
-Route::get('/orders/index', [OrderController::class, 'index'])->name('orders.index');
-Route::get('/orders/{id}/{status}', [OrderController::class, 'status'])->name('orders.status');
-Route::post('/orders/store', [OrderController::class, 'store'])->name('orders.store');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

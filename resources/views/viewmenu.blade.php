@@ -6,42 +6,44 @@
     <h1 class="text-5xl font-extrabold text-center text-gray-900 mb-4">{{ $menu->name }}</h1>
     <p class="text-center font-bold text-lg text-gray-600">Explore delicious dishes from the {{ $menu->category }} category!</p>
 
-    <!-- Menu Details Section -->
-    <form method="POST" action="{{ route('cart.store') }}" class="mt-8">
-        @csrf
-        <input type="hidden" name="menu_id" value="{{ $menu->id }}">
+    <!-- Menu Direct Order Section -->
+<form method="POST" action="{{ route('direct.checkout') }}" class="mt-8">
+    @csrf
+    <input type="hidden" name="menu_id" value="{{ $menu->id }}">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Menu Image Section -->
-            <div class="p-4 bg-white">
-                <img src="{{ asset('menus/' . $menu->image) }}" alt="{{ $menu->name }}" class="rounded-lg shadow-lg w-full h-64 object-cover transition-transform duration-300 hover:scale-105">
-                <a href="" class="block bg-gradient-to-r from-indigo-500 to-blue-600 text-white text-center mt-6 px-6 py-3 rounded-md shadow-lg hover:from-indigo-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
-                    Learn More About This Menu
-                </a>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Menu Image Section -->
+        <div class="p-4 bg-white">
+            <img src="{{ asset('menus/' . $menu->image) }}" alt="{{ $menu->name }}" class="rounded-lg shadow-lg w-full h-64 object-cover transition-transform duration-300 hover:scale-105">
+            <a href="#" class="block bg-gradient-to-r from-indigo-500 to-blue-600 text-white text-center mt-6 px-6 py-3 rounded-md shadow-lg hover:from-indigo-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+                Learn More About This Menu
+            </a>
+        </div>
 
-            <!-- Menu Quantity and Details Section -->
-            <div class="p-6 bg-white">
-                <div class="space-y-4">
-                    <p class="text-lg text-gray-900 flex items-center">
-                        <i class="ri-price-tag-line text-green-500 text-xl mr-3"></i>
-                        <span><strong>Price:</strong> ${{ number_format($menu->price, 2) }} <span class="text-sm font-bold text-gray-600">Per Item</span></span>
-                    </p>
+        <!-- Menu Quantity and Details Section -->
+        <div class="p-6 bg-white">
+            <div class="space-y-4">
+                <p class="text-lg text-gray-900 flex items-center">
+                    <i class="ri-price-tag-line text-green-500 text-xl mr-3"></i>
+                    <span><strong>Price:</strong> ${{ number_format($menu->price, 2) }} <span class="text-sm font-bold text-gray-600">Per Item</span></span>
+                </p>
 
-                    <label for="quantity" class="block text-lg text-gray-900 font-bold mt-4">
-                        <i class="ri-archive-line text-red-500 text-xl mr-3"></i> Quantity:
-                    </label>
-                    <input type="number" id="quantity" name="quantity" class="w-full p-3 border text-black font-bold rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all" min="1" value="1" required>
-                </div>
+                <label for="quantity" class="block text-lg text-gray-900 font-bold mt-4">
+                    <i class="ri-archive-line text-red-500 text-xl mr-3"></i> Quantity:
+                </label>
+                <input type="number" id="quantity" name="quantity" class="w-full p-3 border text-black font-bold rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all" min="1" value="1" required>
 
-                <div class="bg-white py-2 px-2 shadow-lg mt-8">
-                    <div class="text-center">
-                        <button type="submit" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white mb-2 px-8 py-3 rounded-lg shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 flex items-center">
-                            <i class="ri-shopping-cart-line mr-2"></i> Add to Cart
-                        </button>
-                    </div>
+            <div class="bg-white py-2 px-2 shadow-lg mt-8">
+                <div class="text-center">
+                    <button type="submit" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white mb-2 px-8 py-3 rounded-lg shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 flex items-center">
+                        <i class="ri-shopping-cart-line mr-2"></i> Order Now
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
+</form>
+
 <!-- Sidebar Section -->
 <div class="p-4 bg-white">
     <div class="space-y-4">

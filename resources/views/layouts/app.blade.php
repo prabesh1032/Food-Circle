@@ -48,7 +48,7 @@
                         <span>Orders</span>
                     </a>
                     <!-- Customers -->
-                    <a href="" class="flex items-center space-x-3 text-lg hover:bg-cyan-500 hover:text-black p-3 rounded-md">
+                    <a href="{{ route('customers.index') }}" class="flex items-center space-x-3 text-lg hover:bg-cyan-500 hover:text-black p-3 rounded-md">
                         <i class="ri-user-3-line text-xl"></i>
                         <span>Customers</span>
                     </a>
