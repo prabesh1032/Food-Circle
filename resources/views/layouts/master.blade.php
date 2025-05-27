@@ -11,7 +11,7 @@
 
 <body class="bg-gray-50 text-gray-300">
     <!-- Alert --> @include('layouts.alert')
-    <div class="flex justify-between px-20 bg-cyan-600 text-black py-2">
+    <div class="flex justify-between px-20 bg-cyan-600 text-black py-2" >
         <div>
             <a href="{{ route('menu') }}" class="text-lg font-semibold hover:text-yellow-500">
                 <i class="ri-restaurant-fill"></i> Delicious Deals

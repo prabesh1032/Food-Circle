@@ -45,18 +45,35 @@ class OrderController extends Controller
             'address' => 'required|string|max:255',
         ]);
 
-        // Additional fields
         $data['user_id'] = auth()->id();
         $data['status'] = 'Pending';
-
-        // Calculate total price
         $data['total_price'] = $data['price'] * $data['quantity'];
 
-        // Create the order
-        Order::create($data);
+        // Create order
+        $order = Order::create($data);
+
+        // Prepare data for email
+        $menu = Menu::find($data['menu_id']);
+        $emailData = [
+            'name' => $data['name'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
+            'menuName' => $menu->name,
+            'quantity' => $data['quantity'],
+            'totalPrice' => $data['total_price'],
+            'paymentMethod' => $data['payment_method'],
+            'status' => $data['status'],
+        ];
+
+        // Send order confirmation email to user
+        Mail::send('email.orderemail', $emailData, function ($message) use ($data) {
+            $message->to(auth()->user()->email)
+                ->subject('Your FoodCircle Order Confirmation');
+        });
 
         return redirect('/')->with('success', 'Your order has been placed successfully!');
     }
+
 
     /**
      * List all orders.
