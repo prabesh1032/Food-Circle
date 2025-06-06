@@ -74,6 +74,73 @@ class OrderController extends Controller
         return redirect('/')->with('success', 'Your order has been placed successfully!');
     }
 
+    public function storeEsewa(Request $request, $menu_id, $quantity)
+    {
+        $encodedData = $request->input('data');
+        $decodedData = base64_decode($encodedData);
+        $data = json_decode($decodedData);
+        $transaction_uuid = time();
+        $menu = Menu::findOrFail($menu_id);
+
+
+        // ❌ Check if eSewa status is not COMPLETE
+        if (!isset($data->status) || $data->status !== "COMPLETE") {
+            return redirect('/')->with('error', '❌ eSewa payment failed.');
+        }
+
+        // ✅ Extract values safely
+        $total_price = $data->total_amount ?? 0;
+        $quantity = $quantity ?? 1;
+
+        $user = auth()->user();
+
+        // ✅ Create order
+        $order = new Order();
+        $order->menu_id = $menu_id;
+        $order->total_price = $data->total_amount ?? 0; // Or calculate if necessary
+        $order->quantity = $quantity ?? 1;
+        $order->price = $menu->price ?? $order->total_price; // Set a default price value
+        $order->payment_method = "eSewa";
+        $order->name = $user->name;
+        $order->phone = $user->phone ?? 'Not Provided';
+        $order->address = $user->address ?? 'Not Provided';
+        $order->user_id = $user->id;
+        $order->status = "Pending";
+        $order->save();
+
+        // ✉️ Send email
+$emaildata = [
+    'order_id' => $order->id,
+    'name' => $user->name,
+    'email' => $user->email,
+    'phone' => $user->phone,
+    'address' => $user->address,
+    'menu_name' => $menu->name,
+    'menu_price' => $menu->price,
+    'quantity' => $order->quantity,
+    'total_price' => $order->total_price,
+    'payment_method' => $order->payment_method,
+    'status' => $order->status,
+    'order_date' => $order->created_at->format('Y-m-d H:i:s'),
+];
+
+// Send the email
+Mail::send('email.orderemail', $emaildata, function ($message) use ($order, $user) {
+    $message->to($user->email, $user->name)
+        ->subject('Order Confirmation - Order #' . $order->id);
+});
+
+        // ✅ Redirect with success
+        return redirect('/')->with('success', '✅ Order completed via eSewa successfully.');
+    }
+    public function storeEsewaGet(Request $request, $menu_id, $quantity)
+    {
+        // Verify and process the success callback (similar to storeEsewa logic)
+        return $this->storeEsewa($request, $menu_id, $quantity); // Reuse POST logic if safe
+    }
+
+
+
 
     /**
      * List all orders.
