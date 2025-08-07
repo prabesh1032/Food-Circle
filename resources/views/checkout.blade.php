@@ -1,40 +1,33 @@
 @extends('layouts.master')
 
 @section('content')
-<h1 class="text-yellow-500 text-4xl font-extrabold text-center mt-8">Checkout</h1>
+<div class="bg-gradient-to-br from-yellow-50 via-yellow-100 to-yellow-50 min-h-screen py-16 px-4">
+    <h1 class="text-cyan-600 text-5xl font-extrabold text-center mb-12 tracking-wide drop-shadow-md">
+        Checkout
+    </h1>
 
-<div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-lg border-2 border-yellow-500">
+    <div class="max-w-4xl mx-auto bg-white p-12 rounded-3xl shadow-2xl border-t-8 border-yellow-400">
+        <!-- Success and Error Messages -->
+        @if (session('success'))
+            <div class="bg-green-100 text-green-700 text-center mb-6 font-semibold rounded-lg py-3 px-5 shadow-inner">
+                {{ session('success') }}
+            </div>
+        @elseif (session('error'))
+            <div class="bg-red-100 text-red-700 text-center mb-6 font-semibold rounded-lg py-3 px-5 shadow-inner">
+                {{ session('error') }}
+            </div>
+        @endif
 
-    <!-- Success and Error Messages -->
-    @if (session('success'))
-        <div class="text-green-500 text-center mb-4">
-            {{ session('success') }}
-        </div>
-    @elseif (session('error'))
-        <div class="text-red-500 text-center mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    <!-- Order Form -->
-    <form action="{{ route('orders.store') }}" method="post" id="checkoutForm">
-        @csrf
-
-        <!-- Food Details -->
-        <div class="flex flex-col md:flex-row gap-8">
-            <img src="{{ asset('menus/' . $menu->image) }}" alt="Food Image" class="w-full md:w-1/3 h-44 object-cover rounded-lg shadow-md">
-
-            <div class="flex-1">
-                <h2 class="text-3xl font-bold text-black">{{ $menu->name }}</h2>
-                <p class="text-lg text-gray-700 mt-4">
-                    <span class="font-semibold">Price:</span> ${{ number_format($menu->price, 2) }}
-                </p>
-                <p class="text-lg text-gray-700">
-                    <span class="font-semibold">Quantity:</span> {{ $quantity }}
-                </p>
-                <p class="text-xl text-gray-900 font-bold mt-4">
-                    <i class="ri-calculator-line text-yellow-500"></i>
-                    Total: ${{ number_format($menu->price * $quantity, 2) }}
+        <!-- Order Summary -->
+        <div class="flex flex-col md:flex-row items-center gap-10 border-b border-yellow-200 pb-8">
+            <img src="{{ asset('menus/' . $menu->image) }}" alt="Food Image"
+                class="w-full md:w-1/3 h-56 object-cover rounded-xl shadow-xl transition-transform hover:scale-105">
+            <div class="flex-1 space-y-3">
+                <h2 class="text-3xl font-semibold text-gray-900">{{ $menu->name }}</h2>
+                <p class="text-lg text-gray-700"><span class="font-semibold">Price:</span> <span class="text-green-600">${{ number_format($menu->price, 2) }}</span></p>
+                <p class="text-lg text-gray-700"><span class="font-semibold">Quantity:</span> {{ $quantity }}</p>
+                <p class="mt-4 text-2xl font-extrabold text-yellow-600 flex items-center gap-2">
+                    <i class="ri-calculator-line text-green-500 text-3xl"></i> Total: <span class="text-green-600">${{ number_format($menu->price * $quantity, 2) }}
                 </p>
             </div>
         </div>
@@ -44,53 +37,69 @@
         <input type="hidden" name="price" value="{{ $menu->price }}">
         <input type="hidden" name="quantity" value="{{ $quantity }}">
 
-        <!-- Customer Information -->
-        <h2 class="text-2xl font-bold text-black mb-4 mt-8">Customer Information</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label for="name" class="text-gray-600 font-semibold">Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name', auth()->user()->name) }}"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-400" required>
-            </div>
-            <div>
-                <label for="email" class="text-gray-600 font-semibold">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email', auth()->user()->email) }}"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-400" required>
-            </div>
-            <div class="mt-6">
-                <label for="phone" class="text-gray-600 font-semibold">Phone Number</label>
-                <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Enter your phone number"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-400" required>
-            </div>
-        </div>
-        <div class="mt-6">
-            <label for="address" class="text-gray-600 font-semibold">Delivery Address</label>
-            <input type="text" id="address" name="address" value="{{ old('address') }}" placeholder="Enter your delivery address"
-                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-400" required>
-        </div>
+        <!-- Checkout Form -->
+        <form action="{{ route('orders.store') }}" method="post" class="mt-10 space-y-10">
+            @csrf
 
-        <!-- Payment Information -->
-        <h2 class="text-2xl font-bold text-black mt-8 mb-4">Payment Method</h2>
-        <div class="flex gap-6">
-            <label class="flex items-center gap-2">
-                <input type="radio" id="paymentMethod" name="payment_method" value="COD" class="focus:ring-2 focus:ring-cyan-400" required>
-                <span class="text-gray-700 font-medium">Cash on Delivery</span>
-            </label>
-            <label class="flex items-center gap-2">
-                <input type="radio" id="paymentMethod" name="payment_method" value="esewa" class="focus:ring-2 focus:ring-cyan-400" required>
-                <span class="text-gray-700 font-medium">eSewa</span>
-            </label>
-        </div>
+            <!-- Customer Information -->
+            <section>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b-2 border-yellow-400 pb-2">Customer Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label for="name" class="block text-gray-700 font-semibold mb-2">Name</label>
+                        <input type="text" id="name" name="name" value="{{ old('name', auth()->user()->name) }}"
+                            class="w-full px-5 py-3 border border-yellow-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-yellow-300 shadow-sm" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
+                        <input type="email" id="email" name="email" value="{{ old('email', auth()->user()->email) }}"
+                            class="w-full px-5 py-3 border border-yellow-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-yellow-300 shadow-sm" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="phone" class="block text-gray-700 font-semibold mb-2">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
+                            placeholder="Enter your phone number"
+                            class="w-full px-5 py-3 border border-yellow-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-yellow-300 shadow-sm" required>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <label for="address" class="block text-gray-700 font-semibold mb-2">Delivery Address</label>
+                    <textarea id="address" name="address" placeholder="Enter your delivery address"
+                        rows="4" required
+                        class="w-full px-5 py-3 border border-yellow-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-yellow-300 shadow-sm resize-none">{{ old('address') }}</textarea>
+                </div>
+            </section>
 
-        <!-- Confirm Button -->
-        <div class="mt-10 text-center">
-            <button type="button" id="paymentButton" class="bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 focus:ring-2 focus:ring-yellow-400 shadow-lg flex items-center gap-2 justify-center">
-                <i class="ri-check-double-line"></i> Confirm Order
-            </button>
-        </div>
-    </form>
+            <!-- Payment Method -->
+            <section>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b-2 border-yellow-400 pb-2">Payment Method</h2>
+                <div class="flex flex-col md:flex-row gap-10">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="radio" id="payment_cod" name="payment_method" value="COD"
+                            class="w-6 h-6 text-yellow-500 border-yellow-400 focus:ring-yellow-400" required>
+                        <span class="text-gray-800 font-semibold group-hover:text-yellow-600 transition">Cash on Delivery</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="radio" id="payment_esewa" name="payment_method" value="esewa"
+                            class="w-6 h-6 text-yellow-500 border-yellow-400 focus:ring-yellow-400" required>
+                        <span class="text-gray-800 font-semibold group-hover:text-yellow-600 transition">eSewa</span>
+                    </label>
+                </div>
+            </section>
 
-    <!-- eSewa Payment Form -->
+            <!-- Confirm Order Button -->
+            <div class="mt-12 text-center">
+                <button type="submit"
+                    class="inline-flex items-center gap-3 bg-yellow-500 hover:bg-yellow-600 text-white font-bold text-xl px-10 py-4 rounded-full shadow-xl transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-400">
+                    <i class="ri-check-double-line text-2xl"></i> Confirm Order
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- eSewa Payment Form -->
 @php
 $total_amount = $total_price; // Ensure this value is defined earlier
 $transaction_uuid = time(); // Unique transaction ID
@@ -117,7 +126,6 @@ $signature = base64_encode($s);
     <input type="hidden" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
     <input type="hidden" id="signature" name="signature" value="{{ $signature }}" required>
 </form>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
