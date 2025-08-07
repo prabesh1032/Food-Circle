@@ -1,0 +1,31 @@
+name: foodcircle
+type: php:8.2
+
+dependencies:
+  nodejs:
+    npm: '*'
+
+build:
+  flavor: composer
+
+web:
+  locations:
+    '/':
+      root: 'public'
+      passthru: '/index.php'
+      allow: false
+      rules:
+        '\.(css|js|gif|jpe?g|png|ttf|eot|woff2?|otf|cast|ogg|ogv|svg|swf|woff|pdf|docx?|xlsx?|pptx?)$':
+          allow: true
+        '^/robots\.txt$':
+          allow: true
+
+disk: 1024
+
+hooks:
+  build: |
+    set -e
+    npm run build
+    php artisan config:cache
+    php artisan route:cache
+    php artisan view:cache
