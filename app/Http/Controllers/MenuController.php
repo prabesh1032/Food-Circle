@@ -26,7 +26,7 @@ class MenuController extends Controller
 
     public function create()
     {
-        $categories = MenuCategory::orderBy('priority')->get(); // Get categories for the dropdown
+        $categories = MenuCategory::orderBy('priority')->get(); // Getcategories for the dropdown
         return view('menus.create', compact('categories'));
     }
 
