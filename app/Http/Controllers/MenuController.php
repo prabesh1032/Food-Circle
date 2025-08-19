@@ -19,11 +19,8 @@ class MenuController extends Controller
         // Assuming you have a Category model and each menu belongs to a category
         $categories = MenuCategory::all();
         $menus = Menu::all();
-
         return view('menu', compact('categories', 'menus'));
     }
-
-
     public function create()
     {
         $categories = MenuCategory::orderBy('priority')->get(); // Getcategories for the dropdown
