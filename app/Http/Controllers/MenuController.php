@@ -72,7 +72,7 @@ class MenuController extends Controller
             $imagename = time() . '.' . $request->image->extension();
             $request->image->move(public_path('menus'), $imagename);
 
-            //delete the old photo if exist
+            //delete the old photo ifexist
             if ($menu->image) {
                 $oldimage = public_path('menus') . '/' . $menu->image;
                 if (file_exists($oldimage)) {
