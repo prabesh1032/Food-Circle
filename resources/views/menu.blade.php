@@ -130,7 +130,7 @@
     </div>
 
     <!-- Special Offers Banner -->
-    <div class="bg-yellow-500 py-8">
+    <div class="bg-yellow-500 py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <div class="mb-4 md:mb-0">
