@@ -52,11 +52,6 @@
                         <i class="ri-user-3-line text-xl"></i>
                         <span>Customers</span>
                     </a>
-                    <!-- Feedback -->
-                    <a href="" class="flex items-center space-x-3 text-lg hover:bg-cyan-500 hover:text-black p-3 rounded-md">
-                        <i class="ri-feedback-line text-xl"></i>
-                        <span>Feedback</span>
-                    </a>
 
                     <!-- Logout -->
                     <form action="{{ route('logout') }}" method="POST">

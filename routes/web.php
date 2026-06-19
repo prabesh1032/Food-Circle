@@ -39,23 +39,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-orders', [OrderController::class, 'userOrders'])->name('myorders');
     Route::post('/cancel-order/{order}', [OrderController::class, 'cancelOrder'])->name('orders.cancel');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
-// POST route for actual form submission
-Route::post('/orderesewa/esewa/{menuid}/{quantity}', [OrderController::class, 'storeEsewa'])->name('order.storeEsewa');
 
-// GET route for eSewa's success callback
-Route::get('/orderesewa/esewa/{menuid}/{quantity}', [OrderController::class, 'storeEsewaGet'])->name('order.storeEsewaGet');
-
-Route::get('/esewa-failure', function () {
+    // eSewa payment routes
+    Route::post('/orderesewa/esewa/{menuid}/{quantity}', [OrderController::class, 'storeEsewa'])->name('order.storeEsewa');
+    Route::get('/orderesewa/esewa/{menuid}/{quantity}', [OrderController::class, 'storeEsewaGet'])->name('order.storeEsewaGet');
+    Route::get('/esewa-failure', function () {
         return redirect('/')->with('error', 'eSewa payment was cancelled or failed.');
     })->name('esewa.failure');
-
-
 
     Route::post('/direct-checkout', [OrderController::class, 'directCheckout'])->name('direct.checkout');
     Route::get('/orders/index', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}/{status}', [OrderController::class, 'status'])->name('orders.status');
-    Route::POST('/orders/store', [OrderController::class, 'store'])->name('orders.store');
-    Route::post('/order/esewa/{cartid}', [OrderController::class, 'storeEsewa'])->name('order.storeEsewa');
+    Route::post('/orders/store', [OrderController::class, 'store'])->name('orders.store');
 });
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

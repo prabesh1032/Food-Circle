@@ -35,41 +35,56 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'menu_id' => 'required|exists:menus,id',
             'price' => 'required|numeric',
             'quantity' => 'required|integer|min:1',
             'payment_method' => 'required|string',
             'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
             'address' => 'required|string|max:255',
         ]);
 
-        $data['user_id'] = auth()->id();
-        $data['status'] = 'Pending';
-        $data['total_price'] = $data['price'] * $data['quantity'];
-
-        // Create order
-        $order = Order::create($data);
-
-        // Prepare data for email
-        $menu = Menu::find($data['menu_id']);
-        $emailData = [
-            'name' => $data['name'],
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'menuName' => $menu->name,
-            'quantity' => $data['quantity'],
-            'totalPrice' => $data['total_price'],
-            'paymentMethod' => $data['payment_method'],
-            'status' => $data['status'],
+        // Prepare order data (exclude email as it's not in the orders table)
+        $orderData = [
+            'menu_id' => $validated['menu_id'],
+            'price' => $validated['price'],
+            'quantity' => $validated['quantity'],
+            'payment_method' => $validated['payment_method'],
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'address' => $validated['address'],
+            'user_id' => auth()->id(),
+            'status' => 'Pending',
+            'total_price' => $validated['price'] * $validated['quantity'],
         ];
 
-        // Send order confirmation email to user
-        Mail::send('email.orderemail', $emailData, function ($message) use ($data) {
-            $message->to(auth()->user()->email)
-                ->subject('Your FoodCircle Order Confirmation');
-        });
+        // Create order
+        $order = Order::create($orderData);
+
+        // Try to send order confirmation email (don't fail the order if email fails)
+        try {
+            $menu = Menu::find($validated['menu_id']);
+            $emailData = [
+                'name' => $validated['name'],
+                'phone' => $validated['phone'],
+                'address' => $validated['address'],
+                'menuName' => $menu->name,
+                'quantity' => $validated['quantity'],
+                'totalPrice' => $orderData['total_price'],
+                'paymentMethod' => $validated['payment_method'],
+                'status' => 'Pending',
+            ];
+
+            Mail::send('email.orderemail', $emailData, function ($message) use ($validated) {
+                $message->to($validated['email'])
+                    ->subject('Your FoodCircle Order Confirmation');
+            });
+        } catch (\Exception $e) {
+            // Log the error but don't fail the order
+            \Log::error('Failed to send order email: ' . $e->getMessage());
+        }
 
         return redirect('/')->with('success', 'Your order has been placed successfully!');
     }
@@ -130,7 +145,7 @@ Mail::send('email.orderemail', $emaildata, function ($message) use ($order, $use
         ->subject('Order Confirmation - Order #' . $order->id);
 });
 
-        // ✅ Redirect with success
+        // ✅ Redirect with success hh
         return redirect('/')->with('success', '✅ Order completed via eSewa successfully.');
     }
     public function storeEsewaGet(Request $request, $menu_id, $quantity)

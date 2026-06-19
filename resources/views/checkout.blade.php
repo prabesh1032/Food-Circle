@@ -32,14 +32,14 @@
             </div>
         </div>
 
-        <!-- Hidden Inputs -->
-        <input type="hidden" name="menu_id" value="{{ $menu->id }}">
-        <input type="hidden" name="price" value="{{ $menu->price }}">
-        <input type="hidden" name="quantity" value="{{ $quantity }}">
-
         <!-- Checkout Form -->
         <form action="{{ route('orders.store') }}" method="post" class="mt-10 space-y-10">
             @csrf
+
+            <!-- Hidden Inputs -->
+            <input type="hidden" name="menu_id" value="{{ $menu->id }}">
+            <input type="hidden" name="price" value="{{ $menu->price }}">
+            <input type="hidden" name="quantity" value="{{ $quantity }}">
 
             <!-- Customer Information -->
             <section>
